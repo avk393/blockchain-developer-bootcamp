@@ -11,6 +11,6 @@ module.exports = async function(deployer) {
     await deployer.deploy(Token);
     await deployer.deploy(Exchange, feeAccount, feePercent)
 
-    
+    console.log('Contracts deployed')
 
 };
