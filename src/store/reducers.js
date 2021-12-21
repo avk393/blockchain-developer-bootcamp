@@ -25,7 +25,7 @@ function exchange(state = {}, action) {
         case 'EXCHANGE_LOADED':
             return { ...state, loaded: true, contract: action.contract }
         case 'CANCELLED_ORDERS_LOADED':
-            return {...state, cancelldOrders: {loaded: true, data: action.cancelledOrders}}
+            return {...state, cancelledOrders: {loaded: true, data: action.cancelledOrders}}
         case 'FILLED_ORDERS_LOADED':
             return {...state, filledOrders: {loaded: true, data: action.filledOrders}}
         case 'ALL_ORDERS_LOADED':

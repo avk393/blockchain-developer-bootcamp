@@ -2,9 +2,10 @@ import React, {Component} from 'react'
 import './App.css'
 import Navbar from './Navbar'
 import Content from './Content'
+import Spinner from './Spinner'
 import {loadWeb3, loadAccount, loadToken, loadExchange} from '../store/interactions.js'
 import { connect } from 'react-redux'
-import { accountSelector, contractsLoadedSelector } from '../store/selectors.js'
+import { contractsLoadedSelector } from '../store/selectors.js'
 
 class App extends Component {
   componentWillMount() {
@@ -39,7 +40,7 @@ class App extends Component {
     return ( 
       <div>
         <Navbar />
-        { this.props.contractsLoaded ? <Content /> : <div className="content"></div> }
+        { this.props.contractsLoaded ? <Content /> : <div className="content"><Spinner type="table"/></div> }
       </div>
     );
   }
