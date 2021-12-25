@@ -1,4 +1,4 @@
-import { get, groupBy, reject } from 'lodash'
+import { get, groupBy, reject, maxBy, minBy } from 'lodash'
 import moment from 'moment'
 import { createSelector } from 'reselect'
 import { ETHER_ADDRESS, GREEN, RED, ether, tokens } from '../helpers'
@@ -231,3 +231,51 @@ export const myOpenOrdersSelector = createSelector(
         return openOrders
     }
 )
+
+const buildGraphData = (orders) => {
+    // Group orders by hour
+    orders = groupBy(orders, (o) => moment.unix(o.timestamp).startOf('hour').format())
+    const hours = Object.keys(orders)
+    // Build graph series
+    const graphData = hours.map((hour) => {
+        // Calculating values for candlestick
+        const group = orders[hour]
+        const open = group[0]
+        const close = group[group.length - 1]
+        const high = maxBy(group, 'tokenPrice')
+        const low = minBy(group, 'tokenPrice')
+        return({
+            x: new Date(hour),
+            y: [open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice]
+        })
+    })
+
+    return graphData
+}
+
+export const priceChartLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded)
+export const priceChartSelector = createSelector(
+    filledOrders,
+    (orders) => {
+        // Sort by data ascending and decorate
+        orders = orders.sort((a,b) => a.timestamp - b.timestamp)
+        orders = orders.map((o) => decorateOrder(o))
+
+        // Get last two orders for classification
+        let secondLastOrder, lastOrder
+        [secondLastOrder, lastOrder] = orders.slice(orders.length -2, orders.length)
+        const lastPrice = get(lastOrder, 'tokenPrice', 0)
+        const secondLastPrice = get(secondLastOrder, 'tokenPrice', 0)
+        
+        return({
+            lastPrice,
+            lastPriceChange: (lastPrice >= secondLastPrice ? '+' : '-'),
+            series: [{
+                data: buildGraphData(orders)
+            }]
+        })
+    }
+)
+
+const orderCancelling = state => get(state, 'exchange.orderCancelling', false)
+export const orderCancellingSelector = createSelector(orderCancelling, status=>status)

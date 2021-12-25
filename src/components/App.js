@@ -15,9 +15,11 @@ class App extends Component {
   async loadBlockchainData(dispatch) {
     // setting up blockchain network
     const web3 = await loadWeb3(dispatch)
+    console.log("Loaded connection: ", web3)
     //const network = await web3.eth.net.getNetworkType()
     const networkId = await web3.eth.net.getId()
     const accounts = await loadAccount(web3, dispatch)
+    console.log("Loaded Account: ", accounts)
 
     // setting up Token 
     const token = await loadToken(web3, networkId, dispatch)

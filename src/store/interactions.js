@@ -8,13 +8,15 @@ import {
     exchangeLoaded, 
     cancelledOrdersLoaded,
     filledOrdersLoaded,
-    allOrdersLoaded
+    allOrdersLoaded,
+    orderCancelling,
+    orderCancelled
     } from "./actions"
 
 
 export const loadWeb3 = async (dispatch) => {
     if(typeof window.ethereum !== 'undefined'){
-      const web3 = new Web3('http://localhost:7545')
+      const web3 = new Web3(window.ethereum)
       dispatch(web3Loaded(web3))
       return web3
     } 
@@ -25,8 +27,12 @@ export const loadWeb3 = async (dispatch) => {
 }
 
 export const loadAccount = async (web3, dispatch) => {
-    const accounts = await web3.eth.getAccounts()
+    // await window.ethereum.enable()
+    const accounts = await web3.eth.requestAccounts()
+    console.log("Loading Accounts: ", accounts)
+    // const accounts = await ethereum.request({method: 'eth_accounts'})
     const account = accounts[0]
+    console.log("Loading Account: ", account)
     dispatch(web3AccountLoaded(account))
     return account
 }
@@ -73,4 +79,22 @@ export const loadAllOrders = async (exchange, dispatch) => {
   const orderStream = await exchange.getPastEvents('Order', {fromBlock:0, toBlock: 'latest'})
   const allOrders = orderStream.map((event) => event.returnValues)
   dispatch(allOrdersLoaded(allOrders))
+}
+
+export const cancelOrder = (dispatch, exchange, order, account) => {
+  console.log("Cancel Order Account: ", account)
+  exchange.methods.cancelOrder(order.id).send({from: account})
+  .on('transactionHash', (hash) => {
+    dispatch(orderCancelling())
+  })
+  .on('error', (error) => {
+    console.log(error)
+    window.alert("There was an error cancelling the order!")
+  })
+}
+
+export const subscribeToEvents = async (dispatch, exchange) => {
+  exchange.events.Cancel({}, (error, event) => {
+    if(event !== null) dispatch(orderCancelled(event.returnValues))
+  })
 }
