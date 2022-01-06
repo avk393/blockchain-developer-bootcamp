@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { Tabs, Tab } from 'react-bootstrap'
 import { priceChartLoadedSelector, priceChartSelector } from '../store/selectors'
 import Chart from 'react-apexcharts'
 import Spinner from './Spinner'
-import { chartOptions, dummyData} from './PriceChart.config'
+import { chartOptions } from './PriceChart.config'
 
 const priceSymbol = (lastPriceChage) => {
     let output

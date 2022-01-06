@@ -13,20 +13,23 @@ class App extends Component {
   }
 
   async loadBlockchainData(dispatch) {
-    // setting up blockchain network
+    // Loading blockchain network
     const web3 = await loadWeb3(dispatch)
-    console.log("Loaded connection: ", web3)
+
+    // Loading Exchange deployment account
     //const network = await web3.eth.net.getNetworkType()
     const networkId = await web3.eth.net.getId()
-    const accounts = await loadAccount(web3, dispatch)
-    console.log("Loaded Account: ", accounts)
+    //const accounts = 
+    await loadAccount(web3, dispatch)
 
-    // setting up Token 
+    // Loading Token contract
     const token = await loadToken(web3, networkId, dispatch)
     if(!token) {
       window.alert('Token smart contract not detected on current network. Please use another network in MetaMask')
       return
     }
+
+    // Loading Exchange contract
     const exchange = await loadExchange(web3, networkId, dispatch)
     if(!exchange) {
       window.alert('Exchange smart contract not detected on current network. Please use another network in MetaMask')

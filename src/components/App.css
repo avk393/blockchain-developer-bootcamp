@@ -147,6 +147,7 @@
 
 td.cancel-order {
   cursor: pointer;
+  pointer-events: auto;
 }
 
 tr.order-book-order {

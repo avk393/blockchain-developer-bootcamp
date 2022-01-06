@@ -1,0 +1,5 @@
+Bugs
+
+// 1. Buy order amount and price reset in state, but text fields not reset
+2. Depositing tokens broken
+3. App loading user0 no matter which account is being used in MetaMask

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import Spinner from './Spinner'
-import {filledOrdersLoadedSelector, filledOrdersSelector} from '../store/selectors'
+import { filledOrdersLoadedSelector, filledOrdersSelector } from '../store/selectors'
 
 const showFilledOrders = (filledOrders) => {
     return(

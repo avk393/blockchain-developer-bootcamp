@@ -14,7 +14,8 @@ import Spinner from './Spinner'
 import { cancelOrder  } from '../store/interactions'
 
 const showMyFilledOrders = (props) => {
-    const { myFilledOrders, dispatch } = props
+    const { myFilledOrders } = props
+    
     return(
         <tbody>
             { myFilledOrders.map((order) => {
@@ -39,7 +40,7 @@ const showMyOpenOrders = (props) => {
                     <tr key={order.id}>
                         <td className={`text-${order.orderTypeClass}`}>{order.orderSign}{order.tokenAmount}</td>
                         <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
-                        <td className="text-muted" onClick={(e) => {
+                        <td className='cancel-order' onClick={(e) => {
                             cancelOrder(dispatch, exchange, order, account)
                         }}>X</td>
                     </tr>
